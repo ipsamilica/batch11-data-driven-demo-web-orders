@@ -1,36 +1,31 @@
 version: 2.1
 
 jobs:
-  build:
+  build-and-test:
     docker:
-      # specify the version you desire here
-      - image: circleci/openjdk:11-browsers-legacy
-
-    # Specify service dependencies here if necessary
-    # CircleCI maintains a library of pre-built images
-    # documented at https://circleci.com/docs/2.0/circleci-images/
-    # - image: circleci/postgres:9.4
-
-    working_directory: ~/repo
-
-    environment:
-      # Customize the JVM maximum heap limit
-      MAVEN_OPTS: -Xmx3200m
+      - image: cimg/openjdk:11.0
 
     steps:
       - checkout
 
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "pom.xml" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
-      - run: mvn install
-
+      # Install latest versions of browsers and their corresponding drivers
       - run:
-          name: Install Maven Dependencies
-          command: mvn dependency:go-offline
+          name: Install Browsers and WebDriverManager
+          command: |
+            # Update and install wget if not installed
+            sudo apt-get update && sudo apt-get install -y wget
+
+            # Install Firefox (latest version)
+            sudo apt-get install -y firefox
+
+            # Install Google Chrome (latest version)
+            wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+            echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+            sudo apt-get update && sudo apt-get install -y google-chrome-stable
+
+            # Install WebDriverManager for handling driver binaries
+            sudo apt-get install -y maven
+            mvn dependency:go-offline
 
       - run:
           name: Build
@@ -46,3 +41,8 @@ jobs:
       - store_artifacts:
           path: test-report
           destination: test-report
+
+workflows:
+  sample:
+    jobs:
+      - build-and-test
