@@ -26,7 +26,8 @@ jobs:
           name: Creating Dummy Artifacts
           command: |
             echo "$(pwd)/target" > /tmp/art-1;
-            mkdir /tmp/artifacts;
+#            mkdir /tmp/artifacts;
+            mkdir test-report;
             echo "$(pwd)/target" > /tmp/artifacts/art-2;
 
       # Download and cache dependencies
