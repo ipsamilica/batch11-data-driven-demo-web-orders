@@ -8,22 +8,13 @@ jobs:
     steps:
       - checkout
 
-      # Install browsers
-      - run:
-          name: Install Browsers
-          command: |
-            sudo apt-get update && sudo apt-get install -y wget firefox
-            # Install Google Chrome
-            wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-            sudo apt-get install -y ./google-chrome-stable_current_amd64.deb
-            # Install ChromeDriver (ensure version compatibility with Chrome)
-            wget -q https://chromedriver.storage.googleapis.com/2.46/chromedriver_linux64.zip
-            unzip chromedriver_linux64.zip
-            sudo mv chromedriver /usr/local/bin/
-            # Install GeckoDriver for Firefox
-            wget -q https://github.com/mozilla/geckodriver/releases/download/v0.30.0/geckodriver-v0.30.0-linux64.tar.gz
-            tar -xzf geckodriver-v0.30.0-linux64.tar.gz
-            sudo mv geckodriver /usr/local/bin/
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "pom.xml" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+            - run: mvn install
 
       - run:
           name: Install Maven Dependencies
