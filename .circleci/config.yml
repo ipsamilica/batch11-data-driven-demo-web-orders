@@ -26,6 +26,10 @@ jobs:
             # Install WebDriverManager for handling driver binaries
             sudo apt-get install -y maven
             mvn dependency:go-offline
+            
+            sudo dpkg --configure -a
+            sudo apt remove ca-certificates-java
+            sudo apt install ca-certificates-java
 
       - run:
           name: Build
