@@ -28,7 +28,7 @@ public class Driver {
                     options.addArguments("enable-automation");
                     options.addArguments("--disable-infobars");
                     options.addArguments("--disable-dev-shm-usage");
-                    driver = new ChromeDriver();
+                    driver = new ChromeDriver(options);
                     break;
                 case "firefox":
                     WebDriverManager.firefoxdriver().setup();
