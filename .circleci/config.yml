@@ -12,24 +12,18 @@ jobs:
       - run:
           name: Install Browsers and WebDriverManager
           command: |
-            # Update and install wget if not installed
-            sudo apt-get update && sudo apt-get install -y wget
-
-            # Install Firefox (latest version)
-            sudo apt-get install -y firefox
-
-            # Install Google Chrome (latest version)
-            wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-            echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
-            sudo apt-get update && sudo apt-get install -y google-chrome-stable
-
-            # Install WebDriverManager for handling driver binaries
-            sudo apt-get install -y maven
-            mvn dependency:go-offline
-            
-            sudo dpkg --configure -a
-            sudo apt remove ca-certificates-java
-            sudo apt install ca-certificates-java
+            sudo apt-get update && sudo apt-get install -y wget firefox
+            # Install Google Chrome
+            wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+            sudo apt-get install -y ./google-chrome-stable_current_amd64.deb
+            # Install ChromeDriver (ensure version compatibility with Chrome)
+            wget -q https://chromedriver.storage.googleapis.com/2.46/chromedriver_linux64.zip
+            unzip chromedriver_linux64.zip
+            sudo mv chromedriver /usr/local/bin/
+            # Install GeckoDriver for Firefox
+            wget -q https://github.com/mozilla/geckodriver/releases/download/v0.30.0/geckodriver-v0.30.0-linux64.tar.gz
+            tar -xzf geckodriver-v0.30.0-linux64.tar.gz
+            sudo mv geckodriver /usr/local/bin/
 
       - run:
           name: Build
