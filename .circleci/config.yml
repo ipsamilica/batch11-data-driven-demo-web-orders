@@ -46,8 +46,3 @@ jobs:
       - store_artifacts:
           path: test-report
           destination: test-report
-
-workflows:
-  sample:
-    jobs:
-      - build-and-test
