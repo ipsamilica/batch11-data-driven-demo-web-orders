@@ -8,6 +8,12 @@ jobs:
     steps:
       - checkout
 
+      # Install browsers
+      - run:
+          name: Install Browsers
+          command: |
+            sudo apt-get update && sudo apt-get install -y firefox google-chrome-stable
+
       - run:
           name: Install Maven Dependencies
           command: mvn dependency:go-offline
